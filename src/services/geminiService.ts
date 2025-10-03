@@ -80,9 +80,9 @@ function createPrompt(data: RPMInput): string {
        - Asesmen Formatif (for/as learning): Jelaskan metode asesmen formatif (misal: observasi, penilaian LKPD).
        - Asesmen Sumatif (of learning): Jelaskan metode asesmen sumatif (misal: tes tulis, penilaian proyek).
 
-    2.  **Tanda Tangan:** Setelah tabel utama, buatlah sebuah tabel baru untuk bagian tanda tangan dengan gaya \`<table style="width: 100%; margin-top: 40px; border: none;">\`. Tabel ini harus memiliki satu baris (\`<tr>\`) dan dua kolom (\`<td>\`).
-        - Kolom kiri: \`<td style="width: 50%; vertical-align: top; border: none;">Mengetahui,<br/>Kepala MTsN 4 Jombang<br/><br/><br/><br/><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
-        - Kolom kanan: \`<td style="width: 50%; vertical-align: top; border: none;">Jombang, [Generate tanggal hari ini format DD MMMM YYYY]<br/>Guru Mata Pelajaran<br/><br/><br/><br/><b>${teacherName}</b><br/>NIP. ${teacherNip}</td>\`
+    2.  **Tanda Tangan:** Setelah tabel utama, buatlah sebuah tabel baru untuk bagian tanda tangan dengan gaya \`<table style="width: 100%; margin-top: 40px; border: none;">\`. Tabel ini harus memiliki satu baris (\`<tr>\`) dan dua kolom (\`<td>\`). Untuk menghilangkan spasi vertikal antar baris, atur gaya CSS \`line-height: 1;\` pada setiap sel.
+        - Kolom kiri: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Mengetahui,<br/>Kepala MTsN 4 Jombang<div style="height: 60px;"></div><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
+        - Kolom kanan: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Jombang, [Generate tanggal hari ini format DD MMMM YYYY]<br/>Guru Mata Pelajaran<div style="height: 60px;"></div><b>${teacherName}</b><br/>NIP. ${teacherNip}</td>\`
 
     3.  **LAMPIRAN:** Gunakan \`<div style="page-break-before: always;">\` untuk memulai di halaman baru.
         - \`<h2>Lampiran</h2>\`
@@ -104,12 +104,9 @@ function createPrompt(data: RPMInput): string {
     `;
 }
 
-// FIX: Update error message to refer to API_KEY, aligning with the guideline-compliant implementation.
 export const MISSING_API_KEY_ERROR = "Kunci API Gemini tidak ditemukan. Harap konfigurasikan variabel lingkungan `API_KEY` di pengaturan deployment Anda (misalnya, di Netlify: Site settings > Build & deploy > Environment).";
 
 export const generateRPM = async (data: RPMInput): Promise<string> => {
-  // FIX: Use process.env.API_KEY as per Gemini API guidelines.
-  // This removes the `import.meta.env` related error and relies on Vite's `define` config to inject the variable.
   const apiKey = process.env.API_KEY;
 
   if (!apiKey || apiKey.trim() === '') {
