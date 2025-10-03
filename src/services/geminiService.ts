@@ -81,7 +81,7 @@ function createPrompt(data: RPMInput): string {
        - Asesmen Sumatif (of learning): Jelaskan metode asesmen sumatif (misal: tes tulis, penilaian proyek).
 
     2.  **Tanda Tangan:** Setelah tabel utama, buatlah sebuah tabel baru untuk bagian tanda tangan dengan gaya \`<table style="width: 100%; margin-top: 40px; border: none;">\`. Tabel ini harus memiliki satu baris (\`<tr>\`) dan dua kolom (\`<td>\`). Untuk menghilangkan spasi vertikal antar baris, atur gaya CSS \`line-height: 1;\` pada setiap sel.
-        - Kolom kiri: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Mengetahui,<br/>Kepala MTsN 4 Jombang<div style="height: 60px;"></div><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
+        - Kolom kiri: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Mengetahui,<br/>Kepala Madrasah<div style="height: 60px;"></div><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
         - Kolom kanan: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Jombang, [Generate tanggal hari ini format DD MMMM YYYY]<br/>Guru Mata Pelajaran<div style="height: 60px;"></div><b>${teacherName}</b><br/>NIP. ${teacherNip}</td>\`
 
     3.  **LAMPIRAN:** Gunakan \`<div style="page-break-before: always;">\` untuk memulai di halaman baru.
