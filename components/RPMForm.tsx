@@ -86,13 +86,13 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
   
   const handleFillExample = useCallback(() => {
     setFormData({
-        teacherName: 'Ahmad Fauzi, S.Pd.',
-        teacherNip: '198503152010011001',
+        teacherName: 'Rino Junaidi, S.Pd.',
+        teacherNip: '198406252023211017',
         className: 'VIII',
         subject: 'Ilmu Pengetahuan Alam (IPA)',
         learningObjectives: 'Siswa mampu mengidentifikasi organ-organ sistem pencernaan manusia dan menjelaskan fungsi masing-masing organ dengan benar.',
         subjectMatter: 'Sistem Pencernaan Manusia',
-        language: 'Bahasa Arab',
+        language: 'Bahasa Inggris',
         meetings: 2,
         pedagogicalPractices: [PedagogicalPractice.INQUIRY_DISCOVERY, PedagogicalPractice.PJBL],
         graduateDimensions: [GraduateDimension.CRITICAL_REASONING, GraduateDimension.COLLABORATION, GraduateDimension.CREATIVITY],
