@@ -79,9 +79,13 @@ const App: React.FC = () => {
     setGeneratedRpm('');
     setError(null);
     setIsConfigError(false);
+
     try {
-      const result = await generateRPM(data);
-      setGeneratedRpm(result);
+      const stream = await generateRPM(data);
+      for await (const chunk of stream) {
+        const textChunk = chunk.text;
+        setGeneratedRpm(prev => prev + textChunk);
+      }
     } catch (e) {
       console.error(e);
       if (e instanceof Error) {
@@ -109,11 +113,11 @@ const App: React.FC = () => {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
              <h2 className="text-2xl font-bold text-teal-700 mb-4">Hasil Rencana Pembelajaran (RPM)</h2>
-            {isLoading && <Spinner message={currentLoadingMessage} />}
+            {isLoading && !generatedRpm && <Spinner message={currentLoadingMessage} />}
             {error && isConfigError && <ConfigErrorDisplay message={error} />}
             {error && !isConfigError && <ErrorDisplay message={error} />}
             {!isLoading && !generatedRpm && !error && <Placeholder />}
-            {generatedRpm && <RPMOutput htmlContent={generatedRpm} />}
+            {generatedRpm && <RPMOutput htmlContent={generatedRpm} isGenerating={isLoading} />}
           </div>
         </div>
       </main>

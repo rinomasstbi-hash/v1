@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import type { RPMInput } from '../types';
 
 const SYSTEM_INSTRUCTION = `Anda adalah asisten ahli dalam pembuatan Rencana Pembelajaran Mendalam (RPM) untuk kurikulum madrasah di Indonesia, khususnya untuk MTsN 4 Jombang. Tugas Anda adalah membuat dokumen RPM yang lengkap, terstruktur, dan siap pakai dalam format HTML. Ikuti struktur dan instruksi di bawah ini dengan SANGAT TELITI menggunakan Ejaan Bahasa Indonesia yang baik dan benar. Pastikan semua teks berwarna hitam atau sangat gelap agar kontrasnya tinggi dan mudah dibaca. Jangan gunakan sintaks Markdown seperti **teks tebal** di dalam output HTML Anda; sebagai gantinya, gunakan tag HTML yang sesuai seperti \`<b>\` atau \`<strong>\`.`;
@@ -136,7 +136,7 @@ function createPrompt(data: RPMInput): string {
 
 export const MISSING_API_KEY_ERROR = "Kunci API Gemini tidak ditemukan. Harap konfigurasikan variabel lingkungan `API_KEY` di pengaturan deployment Anda (misalnya, di Netlify: Site settings > Build & deploy > Environment).";
 
-export const generateRPM = async (data: RPMInput): Promise<string> => {
+export const generateRPM = async (data: RPMInput): Promise<AsyncGenerator<GenerateContentResponse>> => {
   const apiKey = process.env.API_KEY;
 
   if (!apiKey || apiKey.trim() === '') {
@@ -148,21 +148,17 @@ export const generateRPM = async (data: RPMInput): Promise<string> => {
     const model = 'gemini-2.5-flash';
     const prompt = createPrompt(data);
 
-    const response = await ai.models.generateContent({
+    const response = await ai.models.generateContentStream({
       model: model,
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
       }
     });
-    // Clean the response from markdown fences
-    let cleanedText = response.text.replace(/^```html\s*/, '').replace(/\s*```$/, '');
-    // Replace markdown bold with HTML bold tags to ensure proper rendering
-    cleanedText = cleanedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    return cleanedText;
+
+    return response;
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    // Re-throw the error with a more user-friendly message, guiding them on how to fix it.
     if (error instanceof Error) {
         throw new Error(`Terjadi masalah saat berkomunikasi dengan layanan AI. Pastikan kunci API Anda valid. (Detail: ${error.message})`);
     }
