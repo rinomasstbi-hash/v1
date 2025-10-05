@@ -8,6 +8,7 @@ function createPrompt(data: RPMInput): string {
     teacherName,
     teacherNip,
     className,
+    semester,
     subject,
     learningObjectives,
     subjectMatter,
@@ -50,11 +51,20 @@ function createPrompt(data: RPMInput): string {
     `;
   }
 
+  const openingInstruction = language !== 'Tidak Ada'
+    ? `**Mulai kegiatan awal ini dengan salam pembuka yang sesuai dalam ${language}.**`
+    : `**Mulai kegiatan awal dengan salam pembuka.**`;
+
+  const closingInstruction = language !== 'Tidak Ada'
+    ? `**Akhiri kegiatan penutup ini dengan salam penutup yang sesuai dalam ${language}.**`
+    : `**Akhiri kegiatan penutup dengan salam penutup.**`;
+
   return `
     Berdasarkan input berikut:
     - Nama Guru: ${teacherName}
     - NIP Guru: ${teacherNip}
     - Kelas: ${className}
+    - Semester: ${semester}
     - Mata Pelajaran: ${subject}
     - Tujuan Pembelajaran: ${learningObjectives}
     - Materi Pelajaran: ${subjectMatter}
@@ -80,7 +90,7 @@ function createPrompt(data: RPMInput): string {
     a. **IDENTITAS**
        - Nama Madrasah: MTsN 4 Jombang
        - Mata Pelajaran: ${subject}
-       - Kelas/Semester: ${className} / [Generate semester ganjil/genap secara logis]
+       - Kelas/Semester: ${className} / ${semester}
        - Durasi Pertemuan: ${meetings} x (2 x 40 menit)
 
     b. **IDENTIFIKASI**
@@ -100,9 +110,9 @@ function createPrompt(data: RPMInput): string {
        - Pemanfaatan Digital: Generate saran tools digital relevan beserta tautan (contoh: Quizizz, Canva, YouTube).
 
     d. **PENGALAMAN BELAJAR**
-       - Memahami (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan awal. **Mulai kegiatan awal ini dengan salam pembuka yang sesuai dalam ${language}.** Setelah menjelaskan tujuan, tambahkan satu paragraf singkat untuk membangun koneksi emosional siswa dengan mengaitkan materi pada salah satu nilai KBC.
+       - Memahami (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan awal. ${openingInstruction} Setelah menjelaskan tujuan, tambahkan satu paragraf singkat untuk membangun koneksi emosional siswa dengan mengaitkan materi pada salah satu nilai KBC.
        - Mengaplikasi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan inti detail untuk setiap pertemuan sesuai sintaks dari praktik pedagogis masing-masing (${practicesText}). Tambahkan instruksi spesifik untuk mendorong refleksi nilai KBC dalam aktivitas.
-       - Refleksi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan penutup. **Akhiri kegiatan penutup ini dengan salam penutup yang sesuai dalam ${language}.**
+       - Refleksi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan penutup. ${closingInstruction}
 
     e. **ASESMEN PEMBELAJARAN**
        - Asesmen Awal (diagnostik/apersepsi): Jelaskan metode asesmen awal (misal: pertanyaan pemantik lisan, kuis singkat).

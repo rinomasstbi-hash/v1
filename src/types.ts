@@ -21,10 +21,11 @@ export interface RPMInput {
   teacherName: string;
   teacherNip: string;
   className: string;
+  semester: 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI';
   subject: string;
   learningObjectives: string;
   subjectMatter: string;
-  language: 'Bahasa Inggris' | 'Bahasa Arab';
+  language: 'Bahasa Inggris' | 'Bahasa Arab' | 'Tidak Ada';
   meetings: number;
   pedagogicalPractices: PedagogicalPractice[];
   graduateDimensions: GraduateDimension[];

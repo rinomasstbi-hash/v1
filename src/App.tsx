@@ -22,7 +22,7 @@ const Placeholder = () => (
         </svg>
         <h3 className="text-xl font-semibold text-teal-700">Selamat Datang di RPM KBC Generator</h3>
         <p className="mt-2">Output Rencana Pembelajaran Mendalam (RPM) Anda akan muncul di sini.</p>
-        <p className="mt-1 text-sm">Isi formulir di sebelah kiri, atau gunakan data contoh untuk memulai.</p>
+        <p className="mt-1 text-sm">Isi formulir di sebelah kiri dan klik "Generate RPM" untuk memulai.</p>
     </div>
 );
 

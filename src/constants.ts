@@ -18,3 +18,23 @@ export const GRADUATE_DIMENSIONS: GraduateDimension[] = [
   GraduateDimension.HEALTH,
   GraduateDimension.COMMUNICATION,
 ];
+
+export const SUBJECTS: string[] = [
+  "Al-Qur'an Hadis (Qurdits)",
+  "Akidah Akhlak",
+  "Fikih",
+  "Sejarah Kebudayaan Islam (SKI)",
+  "Bahasa Arab",
+  "Bahasa Indonesia",
+  "Matematika",
+  "Ilmu Pengetahuan Alam (IPA)",
+  "Ilmu Pengetahuan Sosial (IPS)",
+  "Pendidikan Pancasila dan Kewarganegaraan (PPKn)",
+  "Bahasa Inggris",
+  "Seni Budaya dan Prakarya",
+  "Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK)",
+  "Teknologi Informasi dan Komunikasi (TIK)",
+  "Bahasa Jawa",
+  "Aswaja",
+  "Mabadi' Fiqhiyah"
+];

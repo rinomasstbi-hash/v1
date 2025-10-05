@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RPMInput, PedagogicalPractice, GraduateDimension } from '../types';
-import { PEDAGOGICAL_PRACTICES, GRADUATE_DIMENSIONS } from '../constants';
+import { PEDAGOGICAL_PRACTICES, GRADUATE_DIMENSIONS, SUBJECTS } from '../constants';
 
 interface RPMFormProps {
   onSubmit: (data: RPMInput) => void;
@@ -43,10 +43,11 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
     teacherName: '',
     teacherNip: '',
     className: 'VII',
-    subject: '',
+    semester: 'I',
+    subject: SUBJECTS[0],
     learningObjectives: '',
     subjectMatter: '',
-    language: 'Bahasa Arab',
+    language: 'Tidak Ada',
     meetings: 1,
     pedagogicalPractices: [PEDAGOGICAL_PRACTICES[0]],
     graduateDimensions: [],
@@ -89,6 +90,7 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
         teacherName: 'Ahmad Fauzi, S.Pd.',
         teacherNip: '198503152010011001',
         className: 'VIII',
+        semester: 'III',
         subject: 'Ilmu Pengetahuan Alam (IPA)',
         learningObjectives: 'Siswa mampu mengidentifikasi organ-organ sistem pencernaan manusia dan menjelaskan fungsi masing-masing organ dengan benar.',
         subjectMatter: 'Sistem Pencernaan Manusia',
@@ -127,17 +129,36 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
       <InputField id="teacherNip" label="NIP Guru" type="text" value={formData.teacherNip} onChange={handleChange} />
       {errors.teacherNip && <p className="text-red-500 text-sm -mt-4">{errors.teacherNip}</p>}
       
-      <div>
-        <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-        <select id="className" name="className" value={formData.className} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
-          <option>VII</option>
-          <option>VIII</option>
-          <option>IX</option>
-        </select>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+          <select id="className" name="className" value={formData.className} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
+            <option>VII</option>
+            <option>VIII</option>
+            <option>IX</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="semester" className="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+          <select id="semester" name="semester" value={formData.semester} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
+            <option>I</option>
+            <option>II</option>
+            <option>III</option>
+            <option>IV</option>
+            <option>V</option>
+            <option>VI</option>
+          </select>
+        </div>
       </div>
 
-      <InputField id="subject" label="Mata Pelajaran" value={formData.subject} onChange={handleChange} />
-      {errors.subject && <p className="text-red-500 text-sm -mt-4">{errors.subject}</p>}
+      <div>
+        <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran</label>
+        <select id="subject" name="subject" value={formData.subject} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
+            {SUBJECTS.map(subject => <option key={subject} value={subject}>{subject}</option>)}
+        </select>
+        {errors.subject && <p className="text-red-500 text-sm -mt-4">{errors.subject}</p>}
+      </div>
+
       <TextareaField id="learningObjectives" label="Tujuan Pembelajaran" value={formData.learningObjectives} onChange={handleChange} />
       {errors.learningObjectives && <p className="text-red-500 text-sm -mt-4">{errors.learningObjectives}</p>}
       <TextareaField id="subjectMatter" label="Materi Pelajaran" value={formData.subjectMatter} onChange={handleChange} />
@@ -146,6 +167,7 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
       <div>
         <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">Bahasa Pembuka/Penutup</label>
         <select id="language" name="language" value={formData.language} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900">
+          <option>Tidak Ada</option>
           <option>Bahasa Arab</option>
           <option>Bahasa Inggris</option>
         </select>
