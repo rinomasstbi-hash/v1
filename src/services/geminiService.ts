@@ -20,6 +20,35 @@ function createPrompt(data: RPMInput): string {
   const practicesText = pedagogicalPractices
     .map((practice, index) => `Pertemuan ${index + 1}: ${practice}`)
     .join(', ');
+    
+  let lkpdInstructions = '';
+  for (let i = 0; i < meetings; i++) {
+    const meetingNumber = i + 1;
+    const practice = pedagogicalPractices[i];
+    lkpdInstructions += `
+        <div style="page-break-before: always;">
+        <h3><b>Lampiran ${meetingNumber}: Lembar Kerja Peserta Didik (Pertemuan Ke-${meetingNumber})</b></h3>
+          <p><b>PENTING:</b> Desain LKPD ini secara spesifik untuk mendukung praktik pedagogis <b>${practice}</b>.</p>
+          <h4><b>A. Identitas</b></h4>
+          <p>Nama: _______________________<br>
+             Kelas: ${className}<br>
+             No. Absen: _______________________<br>
+             Pertemuan Ke: ${meetingNumber}</p>
+          <h4><b>B. Petunjuk Penggunaan</b></h4>
+          <p>Jelaskan cara mengerjakan LKPD yang disesuaikan dengan sintaks dari <b>${practice}</b>.</p>
+          <h4><b>C. Kegiatan Pembelajaran (Sintaks: ${practice})</b></h4>
+          <p>Integrasikan sintaks dan pengalaman belajar tanpa menggunakan tabel. Buat kegiatan yang relevan dengan sintaks <b>${practice}</b>. Misalnya, jika PjBL, fokus pada langkah-langkah proyek. Jika Inquiry-Discovery, fokus pada pertanyaan penuntun dan observasi.</p>
+            <h5><b>1. Memahami</b></h5>
+            <p>Sajikan ringkasan materi singkat yang relevan untuk pertemuan ini + 2-3 pertanyaan pemahaman kunci.</p>
+            <h5><b>2. Mengaplikasikan</b></h5>
+            <p>Berikan 1 tugas inti atau studi kasus yang mencerminkan sintaks <b>${practice}</b> secara nyata, dengan instruksi yang jelas.</p>
+            <h5><b>3. Merefleksikan</b></h5>
+            <p>Berikan 2-3 pertanyaan refleksi yang mendalam terkait pengalaman belajar siswa menggunakan metode <b>${practice}</b> pada pertemuan ini.</p>
+          <h4><b>D. Penutup</b></h4>
+          <p>Berikan sebuah kalimat penyemangat dan checklist pemahaman diri sederhana.</p>
+        </div>
+    `;
+  }
 
   return `
     Berdasarkan input berikut:
@@ -72,33 +101,34 @@ function createPrompt(data: RPMInput): string {
 
     d. **PENGALAMAN BELAJAR**
        - Memahami (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan awal. **Mulai kegiatan awal ini dengan salam pembuka yang sesuai dalam ${language}.** Setelah menjelaskan tujuan, tambahkan satu paragraf singkat untuk membangun koneksi emosional siswa dengan mengaitkan materi pada salah satu nilai KBC.
-       - Mengaplikasi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan inti detail sesuai sintaks dari praktik pedagogis (${practicesText}). Tambahkan instruksi spesifik untuk mendorong refleksi nilai KBC dalam aktivitas.
+       - Mengaplikasi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan inti detail untuk setiap pertemuan sesuai sintaks dari praktik pedagogis masing-masing (${practicesText}). Tambahkan instruksi spesifik untuk mendorong refleksi nilai KBC dalam aktivitas.
        - Refleksi (berkesadaran, bermakna, menggembirakan): Generate langkah-langkah kegiatan penutup. **Akhiri kegiatan penutup ini dengan salam penutup yang sesuai dalam ${language}.**
 
     e. **ASESMEN PEMBELAJARAN**
-       - Asesmen Awal (diagnostik/apersepsi): Jelaskan metode asesmen awal (misal: pertanyaan pemantik lisan).
-       - Asesmen Formatif (for/as learning): Jelaskan metode asesmen formatif (misal: observasi, penilaian LKPD).
-       - Asesmen Sumatif (of learning): Jelaskan metode asesmen sumatif (misal: tes tulis, penilaian proyek).
+       - Asesmen Awal (diagnostik/apersepsi): Jelaskan metode asesmen awal (misal: pertanyaan pemantik lisan, kuis singkat).
+       - Asesmen Formatif (for/as learning): Jelaskan metode asesmen formatif (misal: observasi partisipasi, penilaian LKPD, penilaian antar teman).
+       - Asesmen Sumatif (of learning): Jelaskan metode asesmen sumatif (misal: tes tulis di akhir bab, penilaian proyek, presentasi).
 
-    2.  **Tanda Tangan:** Setelah tabel utama, buatlah sebuah tabel baru untuk bagian tanda tangan dengan gaya \`<table style="width: 100%; margin-top: 40px; border: none;">\`. Tabel ini harus memiliki satu baris (\`<tr>\`) dan dua kolom (\`<td>\`). 
-        - Kolom kiri: \`<td style="width: 50%; vertical-align: top; border: none;">Mengetahui,<br/>Kepala MTsN 4 Jombang<br/><br/><br/><br/><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
-        - Kolom kanan: \`<td style="width: 50%; vertical-align: top; border: none; line-height: 1;">Jombang, [Generate tanggal hari ini format DD MMMM YYYY]<br/>Guru Mata Pelajaran<div style="height: 60px;"></div><b>${teacherName}</b><br/>NIP. ${teacherNip}</td>\`
+    2.  **Tanda Tangan:** Setelah tabel utama, buatlah sebuah tabel baru untuk bagian tanda tangan dengan gaya \`<table style="width: 100%; margin-top: 40px; border: none; text-align: center;">\`. Tabel ini harus memiliki satu baris (\`<tr>\`) dan dua kolom (\`<td>\`).
+        - Kolom kiri: \`<td style="width: 50%; border: none; line-height: 1.2;">Mengetahui,<br/>Kepala MTsN 4 Jombang<div style="height: 60px;"></div><b>Sulthon Sulaiman, M.Pd.I.</b><br/>NIP. 19810616 2005011003</td>\`
+        - Kolom kanan: \`<td style="width: 50%; border: none; line-height: 1.2;">Jombang, [Generate tanggal hari ini format DD MMMM YYYY]<br/>Guru Mata Pelajaran<div style="height: 60px;"></div><b>${teacherName}</b><br/>NIP. ${teacherNip}</td>\`
 
-    3.  **LAMPIRAN:** Gunakan \`<div style="page-break-before: always;">\` untuk memulai di halaman baru.
-        - \`<h2>Lampiran</h2>\`
-        - **Lampiran 1: Lembar Kerja Peserta Didik (LKPD)** (Buat LKPD yang LENGKAP)
-          - \`<h3>A. Identitas</h3>\` (Nama, Kelas, No. Absen, dll.)
-          - \`<h3>B. Petunjuk Penggunaan</h3>\`
-          - \`<h3>C. Kegiatan Pembelajaran</h3>\` (Integrasikan sintaks dan pengalaman belajar tanpa tabel)
-            - \`<h4>1. Memahami</h4>\` (Sajikan materi singkat + 3 pertanyaan pemahaman)
-            - \`<h4>2. Mengaplikasikan</h4>\` (1 tugas studi kasus nyata + instruksi)
-            - \`<h4>3. Merefleksikan</h4>\` (2-3 pertanyaan refleksi)
-          - \`<h3>D. Penutup</h3>\` (Kata penyemangat + checklist pemahaman diri)
-        - **Lampiran 2: Instrumen Asesmen**
-          - \`<h4>Asesmen Awal</h4>\` (Buat 5 soal [pilih tipe soal yang sesuai] beserta kunci jawabannya)
-          - \`<h4>Rubrik Penilaian Sikap</h4>\` (Buat tabel HTML 4x5 untuk menilai sikap)
-          - \`<h4>Rubrik Penilaian Pengetahuan</h4>\` (Buat tabel HTML 4x5 untuk menilai pengetahuan)
-          - \`<h4>Rubrik Penilaian Keterampilan</h4>\` (Buat tabel HTML 4x5 untuk menilai keterampilan)
+    3.  **LAMPIRAN:** Gunakan \`<div style="page-break-before: always;"><h2>Lampiran</h2></div>\` untuk memulai di halaman baru.
+        ${lkpdInstructions}
+        <div style="page-break-before: always;">
+        <h3><b>Lampiran ${meetings + 1}: Instrumen Asesmen</b></h3>
+          <h4><b>A. Asesmen Diagnostik (Awal)</b></h4>
+          <p>Buat 5 soal pertanyaan pemantik atau kuis singkat yang relevan dengan materi, beserta kunci jawabannya, untuk mengukur pemahaman awal siswa.</p>
+          
+          <h4><b>B. Instrumen Asesmen Formatif</b></h4>
+          <p><b>PENTING:</b> Buat instrumen yang relevan dengan metode asesmen formatif yang Anda jelaskan di bagian E.2. Misalnya: Jika penilaian LKPD, buat rubrik penilaian detail untuk setiap LKPD. Jika observasi, buat lembar ceklis observasi partisipasi siswa.</p>
+          
+          <h4><b>C. Instrumen Asesmen Sumatif</b></h4>
+          <p><b>PENTING:</b> Buat instrumen yang relevan dengan metode asesmen sumatif yang Anda jelaskan di bagian E.3. Misalnya: Jika tes tulis, buat 5-10 soal pilihan ganda atau esai lengkap dengan kunci jawaban dan pedoman penskoran. Jika penilaian proyek/produk, buat rubrik penilaian yang komprehensif.</p>
+          
+          <h4><b>D. Rubrik Penilaian Sikap</b></h4>
+          <p>Buat satu tabel rubrik HTML untuk menilai sikap siswa yang mencakup dimensi lulusan yang dipilih (misalnya: Bernalar Kritis, Kreatif, Gotong Royong, dll.).</p>
+        </div>
 
     Pastikan seluruh output adalah satu blok kode HTML yang valid dan rapi.
     `;

@@ -1,5 +1,5 @@
 {
-  "name": "Copy of Deploy RPM KBC v.1",
+  "name": "rpm-kbc-v.1",
   "description": "An application to generate Detailed Learning Plans (RPM) for all subjects at MTsN 4 Jombang, integrating the 'Kurikulum Berbasis Cinta' (KBC) values.",
   "requestFramePermissions": []
 }

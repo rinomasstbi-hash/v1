@@ -1,4 +1,3 @@
-
 import { PedagogicalPractice, GraduateDimension } from './types';
 
 export const PEDAGOGICAL_PRACTICES: PedagogicalPractice[] = [
