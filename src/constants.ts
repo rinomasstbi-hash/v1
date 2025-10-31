@@ -1,10 +1,15 @@
 import { PedagogicalPractice, GraduateDimension } from './types';
 
 export const PEDAGOGICAL_PRACTICES: PedagogicalPractice[] = [
+  PedagogicalPractice.CTL,
+  PedagogicalPractice.COOPERATIVE,
+  PedagogicalPractice.DIFFERENTIATED,
+  PedagogicalPractice.FLIPPED,
+  PedagogicalPractice.GAME_BASED,
   PedagogicalPractice.INQUIRY_DISCOVERY,
   PedagogicalPractice.PJBL,
+  PedagogicalPractice.PBL,
   PedagogicalPractice.PROBLEM_SOLVING,
-  PedagogicalPractice.GAME_BASED,
   PedagogicalPractice.STATION_LEARNING,
 ];
 

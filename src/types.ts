@@ -4,6 +4,11 @@ export enum PedagogicalPractice {
   PROBLEM_SOLVING = 'Problem Solving',
   GAME_BASED = 'Game Based Learning',
   STATION_LEARNING = 'Station Learning',
+  PBL = 'Problem Based Learning (PBL)',
+  COOPERATIVE = 'Cooperative Learning',
+  CTL = 'Contextual Teaching and Learning (CTL)',
+  FLIPPED = 'Flipped Classroom',
+  DIFFERENTIATED = 'Differentiated Instruction',
 }
 
 export enum GraduateDimension {
@@ -15,6 +20,12 @@ export enum GraduateDimension {
   INDEPENDENCE = 'Kemandirian',
   HEALTH = 'Kesehatan',
   COMMUNICATION = 'Komunikasi',
+}
+
+export enum IntegrationOption {
+  NONE = 'Tidak Ada',
+  SRA = 'Insersi Nilai SRA (Sekolah Ramah Anak)',
+  TKA = 'Integrasi Literasi/Numerasi (TKA)',
 }
 
 export interface RPMInput {
@@ -29,4 +40,5 @@ export interface RPMInput {
   meetings: number;
   pedagogicalPractices: PedagogicalPractice[];
   graduateDimensions: GraduateDimension[];
+  integrationOption: IntegrationOption;
 }
