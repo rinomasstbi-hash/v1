@@ -7,7 +7,7 @@ interface RPMFormProps {
   isLoading: boolean;
 }
 
-const InputField: React.FC<{ id: string, label: string, type?: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }> = ({ id, label, type = "text", value, onChange, required = true }) => (
+const InputField: React.FC<{ id: string, label: string, type?: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }> = ({ id, label, type = "text", value, onChange, required = true }) => (
   <div>
     <label htmlFor={id} className="block text-sm font-semibold text-slate-600 mb-1">{label}</label>
     <input
@@ -17,6 +17,7 @@ const InputField: React.FC<{ id: string, label: string, type?: string, value: st
       value={value}
       onChange={onChange}
       required={required}
+      min={type === 'number' ? 1 : undefined}
       className="w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 text-slate-900 transition"
     />
   </div>
@@ -56,17 +57,32 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
   
   const [errors, setErrors] = useState<Partial<Record<keyof RPMInput, string>>>({});
 
-  useEffect(() => {
-    const numMeetings = formData.meetings > 0 ? formData.meetings : 1;
-    setFormData(prev => ({
-      ...prev,
-      pedagogicalPractices: Array.from({ length: numMeetings }, (_, i) => prev.pedagogicalPractices[i] || PEDAGOGICAL_PRACTICES[0])
-    }));
-  }, [formData.meetings]);
-
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: name === 'meetings' ? parseInt(value, 10) || 1 : value }));
+    
+    setFormData(prev => {
+      // Special handling for the number of meetings to update dependent state atomically
+      if (name === 'meetings') {
+        const numValue = parseInt(value, 10);
+        // Ensure the number of meetings is at least 1, defaulting to 1 if input is invalid (e.g., empty or zero)
+        const newMeetingCount = !isNaN(numValue) && numValue > 0 ? numValue : 1;
+        
+        // Adjust the pedagogical practices array to match the new number of meetings
+        const newPractices = Array.from(
+          { length: newMeetingCount },
+          (_, i) => prev.pedagogicalPractices[i] || PEDAGOGICAL_PRACTICES[0]
+        );
+
+        return {
+          ...prev,
+          meetings: newMeetingCount,
+          pedagogicalPractices: newPractices,
+        };
+      }
+      
+      // Handle all other form fields generically
+      return { ...prev, [name]: value };
+    });
   }, []);
 
   const handlePracticeChange = useCallback((index: number, value: PedagogicalPractice) => {
@@ -194,13 +210,13 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
         </select>
       </div>
       
-      <InputField id="meetings" label="Jumlah Pertemuan" type="number" value={formData.meetings.toString()} onChange={handleChange} />
+      <InputField id="meetings" label="Jumlah Pertemuan" type="number" value={formData.meetings} onChange={handleChange} />
        {errors.meetings && <p className="text-red-500 text-sm -mt-6">{errors.meetings}</p>}
       
       <div>
         <label className="block text-sm font-semibold text-slate-600 mb-1">Praktik Pedagogis per Pertemuan</label>
         <div className="space-y-2">
-        {Array.from({ length: formData.meetings > 0 ? formData.meetings : 1 }).map((_, index) => (
+        {Array.from({ length: formData.meetings }).map((_, index) => (
             <div key={index} className="flex items-center space-x-2">
                 <span className="text-sm font-medium text-slate-600 w-28 flex-shrink-0">Pertemuan {index + 1}:</span>
                 <select 

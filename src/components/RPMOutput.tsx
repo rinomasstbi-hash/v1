@@ -7,6 +7,58 @@ interface RPMOutputProps {
   showBackButton: boolean;
 }
 
+// Helper function to extract the learning topic from the generated HTML
+const extractTopic = (html: string): string => {
+  try {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    const cells = tempDiv.querySelectorAll('td');
+    for (let i = 0; i < cells.length; i++) {
+      if (cells[i].textContent?.trim() === 'Topik Pembelajaran') {
+        // The topic is in the next cell
+        return cells[i + 1]?.textContent?.trim() || 'Generated';
+      }
+    }
+  } catch (e) {
+    console.error("Gagal mem-parsing topik:", e);
+  }
+  return 'Generated'; // Default topic if not found
+};
+
+// Helper function to sanitize a string for use as a filename
+const sanitizeFilename = (name: string): string => {
+  // Remove invalid characters, replace spaces with underscores, and handle multiple underscores
+  const sanitized = name.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_');
+  // Truncate to a reasonable length
+  return sanitized.substring(0, 60);
+};
+
+// Helper function to shorten a topic to 1-2 significant words
+const shortenTopic = (topic: string): string => {
+  // Remove content in parentheses and trim whitespace
+  const cleanedTopic = topic.replace(/\(.*?\)/g, '').trim();
+  const words = cleanedTopic.split(/\s+/);
+  
+  // A simple list of common Indonesian stop words and verbs to ignore for filenames
+  const stopWords = new Set([
+      'dan', 'di', 'ke', 'dari', 'dengan', 'yang', 'untuk', 'pada', 'saat', 
+      'adalah', 'yaitu', 'dalam', 'atas', 'sebagai', 'secara', 'melalui', 
+      'tentang', 'studi', 'mengkaji', 'memahami', 'menganalisis', 'menjelaskan',
+      'pembelajaran', 'materi', 'topik'
+  ]);
+
+  const significantWords = words.filter(word => 
+    !stopWords.has(word.toLowerCase().replace(/[,.]/g, ''))
+  );
+  
+  // Take the first 2 significant words. If none, take the original first two words.
+  const finalWords = significantWords.length > 0 ? significantWords.slice(0, 2) : words.slice(0, 2);
+  
+  // Return joined words, or a default if empty
+  return finalWords.join(' ') || 'Topik';
+};
+
+
 export const RPMOutput: React.FC<RPMOutputProps> = ({ htmlContent, isGenerating, onBack, showBackButton }) => {
   const [copyButtonText, setCopyButtonText] = useState('Salin & Buka di Google Dokumen');
   const [isCopying, setIsCopying] = useState(false);
@@ -144,16 +196,20 @@ export const RPMOutput: React.FC<RPMOutputProps> = ({ htmlContent, isGenerating,
     const blob = new Blob(['\ufeff', html], {
       type: 'application/msword'
     });
+
+    const fullTopic = extractTopic(processedHtml);
+    const shortTopic = shortenTopic(fullTopic);
+    const filename = `RPM_${sanitizeFilename(shortTopic)}.doc`;
     
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'RPM_Generated.doc';
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [isGenerating]);
+  }, [isGenerating, processedHtml]);
   
   const getButtonClass = () => {
     if (copyButtonText === 'Berhasil disalin!') {
