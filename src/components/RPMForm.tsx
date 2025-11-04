@@ -7,7 +7,16 @@ interface RPMFormProps {
   isLoading: boolean;
 }
 
-const InputField: React.FC<{ id: string, label: string, type?: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }> = ({ id, label, type = "text", value, onChange, required = true }) => (
+const InputField: React.FC<{
+  id: string,
+  label: string,
+  type?: string,
+  value: string | number,
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  required?: boolean,
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'],
+  pattern?: string,
+}> = ({ id, label, type = "text", value, onChange, required = true, inputMode, pattern }) => (
   <div>
     <label htmlFor={id} className="block text-sm font-semibold text-slate-600 mb-1">{label}</label>
     <input
@@ -18,6 +27,8 @@ const InputField: React.FC<{ id: string, label: string, type?: string, value: st
       onChange={onChange}
       required={required}
       min={type === 'number' ? 1 : undefined}
+      inputMode={inputMode}
+      pattern={pattern}
       className="w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 text-slate-900 transition"
     />
   </div>
@@ -63,19 +74,22 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
     setFormData(prev => {
       // Special handling for the number of meetings to update dependent state atomically
       if (name === 'meetings') {
-        const numValue = parseInt(value, 10);
-        // Ensure the number of meetings is at least 1, defaulting to 1 if input is invalid (e.g., empty or zero)
-        const newMeetingCount = !isNaN(numValue) && numValue > 0 ? numValue : 1;
+        // Allow only digits
+        if (!/^\d*$/.test(value)) {
+            return prev;
+        }
+
+        const numValue = value === '' ? 0 : parseInt(value, 10);
         
         // Adjust the pedagogical practices array to match the new number of meetings
         const newPractices = Array.from(
-          { length: newMeetingCount },
+          { length: numValue },
           (_, i) => prev.pedagogicalPractices[i] || PEDAGOGICAL_PRACTICES[0]
         );
 
         return {
           ...prev,
-          meetings: newMeetingCount,
+          meetings: numValue,
           pedagogicalPractices: newPractices,
         };
       }
@@ -210,7 +224,16 @@ export const RPMForm: React.FC<RPMFormProps> = ({ onSubmit, isLoading }) => {
         </select>
       </div>
       
-      <InputField id="meetings" label="Jumlah Pertemuan" type="number" value={formData.meetings} onChange={handleChange} />
+      <InputField 
+        id="meetings" 
+        label="Jumlah Pertemuan" 
+        type="text" 
+        value={formData.meetings || ''} 
+        onChange={handleChange}
+        inputMode="numeric"
+        pattern="[0-9]*"
+        required={false}
+      />
        {errors.meetings && <p className="text-red-500 text-sm -mt-6">{errors.meetings}</p>}
       
       <div>
